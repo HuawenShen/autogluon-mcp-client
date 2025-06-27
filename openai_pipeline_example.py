@@ -7,8 +7,8 @@ from openai import OpenAI
 
 # Configuration
 # Where pipeline_server.py is running
-PIPELINE_SERVER_URL = 'https://victorian-handbags-empirical-deals.trycloudflare.com'
-AUTOGLUON_SERVER_URL = 'https://44a9-34-211-143-25.ngrok-free.app'  # Your EC2 server
+PIPELINE_SERVER_URL = 'https://downtown-super-management-poor.trycloudflare.com'
+AUTOGLUON_SERVER_URL = 'https://f266-34-211-143-25.ngrok-free.app'  # Your EC2 server
 
 # Your local paths
 INPUT_FOLDER = '/Users/huawen.shen/Documents/autogluon-mcp-client/test_data'
