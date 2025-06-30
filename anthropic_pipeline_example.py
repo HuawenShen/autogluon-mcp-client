@@ -8,8 +8,8 @@ from rich import print
 
 # Configuration
 # Where pipeline_server.py is running
-PIPELINE_SERVER_URL = 'https://four-calculation-cole-administered.trycloudflare.com'
-AUTOGLUON_SERVER_URL = 'https://384f-34-211-143-25.ngrok-free.app'  # Your EC2 server
+PIPELINE_SERVER_URL = 'https://ears-worldcat-attending-polyester.trycloudflare.com'
+AUTOGLUON_SERVER_URL = 'https://ff31-34-211-143-25.ngrok-free.app'  # Your EC2 server
 
 # Your local paths
 INPUT_FOLDER = '/Users/huawen.shen/Documents/autogluon-mcp-client/test_data'
@@ -38,12 +38,12 @@ Run the mcp tool called run_autogluon_pipeline with these exact parameters, don'
 - output_folder: {OUTPUT_FOLDER}
 - server_url: {AUTOGLUON_SERVER_URL}
 - config_file: {CONFIG_FILE}
-- max_iterations: 1
+- max_iterations: 3
 - provider: bedrock
 - model: anthropic.claude-3-haiku-20240307-v1:0
 - creds_path: {CREDS_PATH}
 - verbosity: info
-- cleanup_server: true
+- cleanup_server: false
 
 If you run into any errors, please explain in detail at which step the error occurred, what actions you took, what code you executed, and share the exact error message verbatim.
 """

@@ -381,4 +381,4 @@ async def run_autogluon_pipeline(
 
 if __name__ == "__main__":
     # Run the server
-    mcp.run(transport="http", host="0.0.0.0", port=8005)
+    mcp.run(transport="streamable-http", host="0.0.0.0", port=8005, path="/mcp")
