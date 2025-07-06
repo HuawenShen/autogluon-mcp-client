@@ -52,9 +52,7 @@ async def run_autogluon_pipeline(
     verbosity: str = "info",
     config_file: Optional[str] = None,
     max_iterations: int = 5,
-    need_user_input: bool = False,
-    provider: str = "bedrock",
-    model: Optional[str] = None,
+    init_prompt: Optional[str] = None,  # 添加初始提示
     creds_path: Optional[str] = None,
     cleanup_server: bool = True
 ) -> dict:
@@ -68,9 +66,7 @@ async def run_autogluon_pipeline(
         verbosity: Log level - "brief", "info", or "detail"
         config_file: Optional path to config file
         max_iterations: Maximum iterations (default: 5)
-        need_user_input: Whether to enable interactive mode
-        provider: LLM provider (bedrock/openai/anthropic)
-        model: Model name (optional)
+        init_prompt: Initial user prompt (optional)
         creds_path: Path to credentials file (optional)
         cleanup_server: Whether to clean up server files after download
         
@@ -102,8 +98,7 @@ async def run_autogluon_pipeline(
     if creds_path:
         credentials_text = load_credentials_from_file(creds_path)
         if not credentials_text:
-            log(
-                f"Warning: Could not load credentials from {creds_path}", "ERROR")
+            log(f"Warning: Could not load credentials from {creds_path}", "ERROR")
 
     # Create client
     if not server_url.endswith('/mcp'):
@@ -184,17 +179,16 @@ async def run_autogluon_pipeline(
 
             # 3. Start task
             log("Starting AutoGluon task", "BRIEF")
-            log(f"Provider: {provider}, Model: {model or 'default'}", "INFO")
-            log(f"Max iterations: {max_iterations}, Interactive: {need_user_input}", "INFO")
+            log(f"Max iterations: {max_iterations}", "INFO")
+            if init_prompt:
+                log(f"Initial prompt: {init_prompt}", "INFO")
 
             result = await client.call_tool("start_task", {
                 "input_dir": server_input_dir,
                 "output_dir": output_folder,
                 "config_path": server_config_path,
                 "max_iterations": max_iterations,
-                "need_user_input": need_user_input,
-                "provider": provider,
-                "model": model,
+                "initial_user_input": init_prompt,  # 传递初始提示
                 "credentials_text": credentials_text
             })
             result = parse_mcp_response(result)
@@ -246,24 +240,6 @@ async def run_autogluon_pipeline(
                     else:
                         log(str(task_log), "DETAIL")
                 last_log_count = len(logs)
-
-                # Check if waiting for input
-                if status.get("waiting_for_input"):
-                    prompt = status.get(
-                        "input_prompt", "Please provide input:")
-                    log(f"PROMPT: {prompt}", "BRIEF")
-                    # This will block waiting for input
-                    user_input = input("Your input (press Enter to skip): ")
-
-                    result = await client.call_tool("send_input", {
-                        "user_input": user_input
-                    })
-                    result = parse_mcp_response(result)
-
-                    if not result["success"]:
-                        log("ERROR: Failed to send input", "ERROR")
-                    else:
-                        log("Input sent", "INFO")
 
                 # Check if completed
                 if status.get("state") == "completed":

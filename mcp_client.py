@@ -28,13 +28,12 @@ class MCPClient:
             raise RuntimeError(
                 f"Failed to connect to MCP server at {self.server_url}: {e}")
 
+
     async def get_available_tools(self) -> List[Any]:
         """List available tools - for pipeline server, this is just run_autogluon_pipeline"""
         if not self.client:
             raise RuntimeError("Not connected to MCP server")
 
-        # Pipeline server has one tool: run_autogluon_pipeline
-        # You might need to adjust this based on actual tool discovery
         return [{
             'name': 'run_autogluon_pipeline',
             'description': 'Run complete AutoGluon pipeline from data upload to results download',
@@ -46,9 +45,7 @@ class MCPClient:
                     "server_url": {"type": "string"},
                     "config_file": {"type": "string"},
                     "max_iterations": {"type": "integer"},
-                    "need_user_input": {"type": "boolean"},
-                    "provider": {"type": "string"},
-                    "model": {"type": "string"},
+                    "init_prompt": {"type": "string"},  # 添加
                     "creds_path": {"type": "string"},
                     "verbosity": {"type": "string"},
                     "cleanup_server": {"type": "boolean"}
